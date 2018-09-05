@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <Company />
+
+    <Product>Markalize</Product>
+
+    <Authors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Source1.en-US.mz.md" />
+    <None Remove="Resources\Source1.fr-FR.mz.md" />
+    <None Remove="Resources\Source1.fr-FR.Tu.mz.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="should" Version="1.1.20" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Source1.fr-FR.Tu.mz.md">
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Source1.fr-FR.mz.md">
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Source1.en-US.mz.md">
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Markalize.Common\Markalize.Common.csproj" />
+    <ProjectReference Include="..\Markalize.Core\Markalize.Core.csproj" />
+  </ItemGroup>
+
+</Project>
