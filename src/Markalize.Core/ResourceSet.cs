@@ -58,6 +58,16 @@ namespace Markalize.Core
                 localizer.AddSources(sources);
             }
 
+            {
+                var sources = this.resources.Where(x => x.Tags != null || x.Tags.Contains("Default")).ToArray();
+                localizer.AddSources(sources);
+            }
+
+            {
+                var sources = this.resources.Where(x => x.Tags == null || x.Tags.Length == 0).ToArray();
+                localizer.AddSources(sources);
+            }
+
             return localizer;
         }
 

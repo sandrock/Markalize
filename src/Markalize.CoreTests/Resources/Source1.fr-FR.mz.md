@@ -8,5 +8,6 @@ Values in this file are translated from the en-US file.
 ```
 
 Key1 Value1 fr-FR
+Key2 = Valeur en français
 
 HowAreYou Comment allez vous aujourd'hui ?

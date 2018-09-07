@@ -6,6 +6,7 @@ namespace Markalize.Core
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
 
     internal class Parser
@@ -25,16 +26,55 @@ namespace Markalize.Core
             if (resource == null)
                 throw new ArgumentNullException("resource");
 
-            string line = reader.ReadLine(), nextLine = null;
-            int skip = 0;
+            string line = reader.ReadLine(), nextLine = null, key = null, genre = null, lineEnding;
+            int skip = 0, number = 0, quoteCount = 0;
             var prefixes = new List<string>(5);
-            bool isInFencedCode = false, inValue = false;
+            bool isInFencedCode = false, inQuotedValue = false, nextLineInContinuation = false;
+            var lineBuilder = new StringBuilder();
+            StringBuilder sb = null;
             while (!reader.EndOfStream)
             {
-                nextLine = reader.ReadLine();
+                nextLine = ReadLine(reader, out lineEnding);
                 if (skip-- > 0)
                 {
                     // don't do anything
+                }
+                else if (inQuotedValue)
+                {
+                    var valueTrimmed = line.Trim();
+                    if (valueTrimmed.Length > 0 && valueTrimmed[valueTrimmed.Length - 1] == '"' && valueTrimmed.Reverse().Take(quoteCount).All(c => c == '"'))
+                    {
+                        // line ends with '"'
+                        // end of value
+                        inQuotedValue = false;
+                        sb.Append(valueTrimmed, 0, valueTrimmed.Length - quoteCount);
+                        resource.Set(key, number, genre, sb.ToString());
+                        sb = null;
+                    }
+                    else
+                    {
+                        // value continues
+                        sb.Append(valueTrimmed);
+                        sb.Append(lineEnding);
+                    }
+                }
+                else if (nextLineInContinuation)
+                {
+                    var valueTrimmed = line.Trim();
+                    if (valueTrimmed.Length > 0 && valueTrimmed[valueTrimmed.Length - 1] == '\\')
+                    {
+                        // line ends with '\'
+                        nextLineInContinuation = true;
+                        sb.Append(valueTrimmed, 0, valueTrimmed.Length - 1);
+                    }
+                    else
+                    {
+                        // end of value
+                        nextLineInContinuation = false;
+                        sb.Append(valueTrimmed);
+                        resource.Set(key, number, genre, sb.ToString());
+                        sb = null;
+                    }
                 }
                 else if (line.StartsWith("```") || line.StartsWith("~~~"))
                 {
@@ -78,7 +118,7 @@ namespace Markalize.Core
                 }
                 else
                 {
-                    var key = ExtractKey(line, out string rawValue, out int number, out string genre);
+                    key = ExtractKey(line, out string rawValue, out number, out genre);
 
                     if (key != null && prefixes.Count > 0)
                     {
@@ -90,12 +130,36 @@ namespace Markalize.Core
                         var valueTrimmed = rawValue.Trim();
                         if (valueTrimmed.Length > 0 && valueTrimmed[0] == '"')
                         {
-                            inValue = true;
+                            // value starts with double quotes
+                            quoteCount = valueTrimmed.TakeWhile(c => c == '"').Count();
+                            valueTrimmed = valueTrimmed.Substring(quoteCount);
+
+                            if (valueTrimmed.Length > 0 && valueTrimmed[valueTrimmed.Length - 1] == '"' && valueTrimmed.Reverse().Take(quoteCount).All(c => c == '"'))
+                            {
+                                // value ends with double quotes
+                                valueTrimmed = valueTrimmed.Substring(0, valueTrimmed.Length - quoteCount);
+                                resource.Set(key, number, genre, valueTrimmed);
+                            }
+                            else
+                            {
+                                inQuotedValue = true;
+                                sb = new StringBuilder();
+                                sb.Append(valueTrimmed);
+                                sb.Append(lineEnding);
+                            }
                         }
-
-                        // TODO: handle various forms of value
-
-                        resource.Set(key, number, genre, rawValue);
+                        else if (valueTrimmed[valueTrimmed.Length - 1] == '\\')
+                        {
+                            // value ends with backslash
+                            nextLineInContinuation = true;
+                            sb = new StringBuilder();
+                            sb.Append(valueTrimmed.Substring(0, valueTrimmed.Length - 1));
+                        }
+                        else
+                        {
+                            // value is a one-liner
+                            resource.Set(key, number, genre, valueTrimmed);
+                        }
                     }
                     else
                     {
@@ -105,10 +169,52 @@ namespace Markalize.Core
                 line = nextLine;
             }
 
-            if (!string.IsNullOrEmpty(line))
+            // this can't work with reader.ReadLine()
+            ////if (!string.IsNullOrEmpty(line))
+            ////{
+            ////    throw new MarkalizeException("File does not seem to end with an empty line");
+            ////}
+        }
+
+        private static string ReadLine(StreamReader reader, out string lineEnding)
+        {
+            lineEnding = null;
+            var lineBuilder = new StringBuilder();
+            char c1 = (char)reader.Peek();
+            char c2;
+            while (c1 != -1)
             {
-                throw new MarkalizeException("File does not seem to end with an empty line");
+                c1 = (char)reader.Read();
+
+                if (c1 == '\r')
+                {
+                    c2 = (char)reader.Peek();
+                    if (c2 == '\n')
+                    {
+                        // windows line ending
+                        lineEnding = "\r\n";
+                        break;
+                    }
+                    else
+                    {
+                        // won't-name-it line ending
+                        lineEnding = "\r";
+                        break;
+                    }
+                }
+                else if (c1 == '\n')
+                {
+                    // unix line ending
+                    lineEnding = "\n";
+                    break;
+                }
+                else
+                {
+                    lineBuilder.Append(c1);
+                }
             }
+
+            return lineBuilder.ToString();
         }
 
         private static string ExtractKey(string line, out string value, out int number, out string genre)
