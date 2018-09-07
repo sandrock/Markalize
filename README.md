@@ -4,6 +4,14 @@ Markalize
 
 A better way to localize your apps in .NET.
 
+WARNING - Project not ready for production
+-------------------------------------------
+
+I am throwing code all over the place. This is NO READY FOR PRODUCTION. Not even for you to test.
+
+Come back later to follow the project status.
+
+
 What's wrong with resource files? (resx)
 -------------------------------------------
 
@@ -21,11 +29,13 @@ What's wrong with resource files? (resx)
   * This comment takes up assembly space if you have many files and assemblies in a project.
   * The comment keeps on coming back. Always.
 
+
 Isn't there anything else already available?
 ----------------------------------------------
 
 * pot files are not well tooled for .NET
 * TODO: document more 
+
 
 What can we change?
 ---------------------
@@ -37,6 +47,7 @@ Don't you think anyone should be able to provide localization in a file that is 
 Don't you like markdown? There is support in here.
 
 Aren't you tired of coding tricks to handle singular/plural/masculine/feminine variants? I am.
+
 
 Let's dive
 -------------------
@@ -56,6 +67,7 @@ Intro        This website provides contents and ideas for developers and foxes. 
              can do without.
 
 ```
+
 
 ### Prefixes
 
@@ -112,6 +124,7 @@ from becoming too long. ""
   * a line feed is a line feed
   * lines are not trimmed from white spaces
   * using a backslash will only enhance the look
+
 
 ### File names (and dimensions)
 
@@ -197,6 +210,7 @@ For performance reasons, you should:
   * use the inline syntax to identify cultures (L-fr.R-fr.T-Tu, L-en.R-US)
 * Keep localizer objects in a static readonly field to avoid allocating too much memory
 
+
 ### Go runtime
 
 What you just did with assembly-embedded files can also be done with filesystem-file or files from a database. This will allow you to create GUI for your users to localize texts. 
@@ -205,6 +219,7 @@ What you just did with assembly-embedded files can also be done with filesystem-
 ### Going further
 
 See the [format specifications](FORMAT-SPEC.md).
+
 
 Roadmap
 --------------
