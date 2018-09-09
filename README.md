@@ -59,13 +59,11 @@ Say that we are going to start with assembly-embedded files just like resx files
 Localization files are key-value pairs It does not change here. Here is a markdown-compatible default resource file.
 
 ```
-
 Hello =      Welcome on our website.
 Navigation = Here you will find various links to find our stuff.
 Intro        This website provides contents and ideas for developers and foxes. Note \
              that the equal sign is not required. Indentation is only decorative. You \
              can do without.
-
 ```
 
 
@@ -99,7 +97,6 @@ Desc2  And if I want to "leave the title"?
 ---
 
 Horizontal bars reset the prefix stack. Note that the current line will create a key `Horizontal` that I don't need. The beauty of doing markdown is that you are quite free to mix localized values, text and formating.
-
 ```
 
 ### Lines and wraping
@@ -146,9 +143,9 @@ The principle here is to think about dimensions. Cultures already have at least 
   * US: USA
   * GB: Great Britain
   * DE: Germany
-* T-V dimension (known subtelty): 
-  * Vos: vouvoiement (considered default in french)
-  * Tu: tutoiement
+* T-V dimension (known linguistic subtelty): 
+  * Vos: vouvoiement (default for french)
+  * Tu: tutoiement (default for english)
 * Subculture dimension (developer created): 
   * Kaamelott: a popular french TV series
   * Star Trek: a popular sci-fi TV series
@@ -186,7 +183,7 @@ var set = new ResourceSet();
 set.LoadFromAssembly(typeof(ResourceSetTests).Assembly, "Resources/Website");
 ```
 
-The `set variable will make sense of all your resource files that look like `Website.***.md`. Now, let's localize.
+The `set` variable will make sense of all your resource files that look like `Website.***.md`. Now, let's localize.
 
 ```
 var localizer1 = set.GetLocalizer();

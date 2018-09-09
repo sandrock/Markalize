@@ -5,10 +5,35 @@
     <Company />
     <Product>Markalize</Product>
     <Authors />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1.0-alpha</Version>
+    <Description>A better way to localize your apps in .NET.</Description>
+    <PackageLicenseUrl>https://github.com/sandrock/Markalize/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/sandrock/Markalize</PackageProjectUrl>
+    <PackageReleaseNotes>Initial pre-release.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Markalize.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\Markalize.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="stylecop.analyzers" Version="1.0.2" />
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="stylecop.analyzers" Version="1.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

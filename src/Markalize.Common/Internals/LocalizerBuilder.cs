@@ -6,11 +6,19 @@ namespace Markalize.Internals
     using System.Globalization;
     using System.Text;
 
+    /// <summary>
+    /// Helps create a <see cref="ILocalizer"/> using fluent methods.
+    /// </summary>
     public class LocalizerBuilder
     {
         private readonly ILocalizerGetter getter;
         private readonly List<LocalizationPreference> preferences;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalizerBuilder"/> class.
+        /// Helps create a <see cref="ILocalizer"/> using fluent methods.
+        /// </summary>
+        /// <param name="getter">the getter</param>
         public LocalizerBuilder(ILocalizerGetter getter)
         {
             if (getter == null)
