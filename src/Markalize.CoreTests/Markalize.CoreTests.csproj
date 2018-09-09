@@ -13,9 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Source1.en-US.mz.md" />
-    <None Remove="Resources\Source1.fr-FR.mz.md" />
-    <None Remove="Resources\Source1.fr-FR.Tu.mz.md" />
+    <None Remove="Resources\Source1.L-en.R-US.Default.md" />
+    <None Remove="Resources\Source1.L-fr.R-FR.md" />
+    <None Remove="Resources\Source1.L-fr.R-FR.T-Tu.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,13 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Source1.fr-FR.Tu.mz.md">
+    <EmbeddedResource Include="Resources\Source1.L-fr.R-FR.T-Tu.md">
       <WithCulture>false</WithCulture>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Source1.fr-FR.mz.md">
+    <EmbeddedResource Include="Resources\Source1.L-fr.R-FR.md">
       <WithCulture>false</WithCulture>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Source1.en-US.mz.md">
+    <EmbeddedResource Include="Resources\Source1.L-en.R-US.Default.md">
       <WithCulture>false</WithCulture>
     </EmbeddedResource>
   </ItemGroup>

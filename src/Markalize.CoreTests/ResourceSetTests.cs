@@ -38,7 +38,7 @@ namespace Markalize.CoreTests
             var set = new ResourceSet();
             set.LoadFromAssembly(typeof(ResourceSetTests).Assembly, "Resources/Source1");
 
-            var localizer = set.GetLocalizer("fr-FR");
+            var localizer = set.MakeLocalizer().ForCulture("fr-FR").GetLocalizer();
             var value = localizer.Localize("Key1");
             value.ShouldEqual("Value1 fr-FR");
 
@@ -52,7 +52,7 @@ namespace Markalize.CoreTests
             var set = new ResourceSet();
             set.LoadFromAssembly(typeof(ResourceSetTests).Assembly, "Resources/Source1");
 
-            var localizer = set.GetLocalizer("en-US");
+            var localizer = set.MakeLocalizer().ForCulture("en-US").GetLocalizer();
             var value = localizer.Localize("Key1");
             value.ShouldEqual("Value1 en-US");
 

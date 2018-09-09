@@ -3,6 +3,7 @@ namespace Markalize.Core
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     internal class ResourceFile
@@ -58,6 +59,10 @@ namespace Markalize.Core
                 return copy;
             }
         }
+
+        public CultureInfo Culture { get; internal set; }
+
+        public Dictionary<string, string> Dimensions { get; internal set; }
 
         internal void Set(string key, int number, string genre, string value)
         {

@@ -227,18 +227,26 @@ Roadmap
 ### Documentation tasks
 
 * [ ] Singulars and plurals
-* [ ] 
-* [ ] 
-* [ ] 
-* [ ] 
-* [ ] 
 
 
 ### Release 1
 
 * [ ] Syntax fully working
-* [ ] Loading assembly  files fully working
-* [ ] Manual loading of files fully working
+  * [ ] Simple value
+  * [ ] Simple value + backslash
+  * [ ] Quoted value
+  * [ ] Quoted value + backslash
+  * [ ] Title 1
+  * [ ] Title 2
+  * [x] Comments (fenced code blocks)
+* [ ] Loading assembly   files fully working
+  * [ ] Determine exact syntax
+  * [ ] Loader code
+  * [ ] Specialized exception type
+* [ ] Loading filesystem files fully working
+  * [ ] Loader code
+* [ ] Loading custom     files fully working
+  * [ ] Loader code
 * [ ] Localizer fully working
 * [ ] Inline culture ID syntax helpers
 * [ ] Compatibility with CultureInfo and classic dev tasks
