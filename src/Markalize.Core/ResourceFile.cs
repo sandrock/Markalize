@@ -6,10 +6,10 @@ namespace Markalize.Core
     using System.Globalization;
     using System.Linq;
 
-    internal class ResourceFile
+    public class ResourceFile
     {
-        private string[] tags;
-        private SortedDictionary<string, Entity> items = new SortedDictionary<string, Entity>();
+        private readonly SortedDictionary<string, Entity> items = new SortedDictionary<string, Entity>();
+        private readonly string[] tags;
 
         public ResourceFile()
         {

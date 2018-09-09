@@ -232,10 +232,12 @@ Roadmap
 ### Release 1
 
 * [ ] Syntax fully working
-  * [ ] Simple value
-  * [ ] Simple value + backslash
-  * [ ] Quoted value
+  * [x] Simple value
+  * [x] Simple value + backslash
+  * [x] Quoted value
   * [ ] Quoted value + backslash
+  * [ ] Quoted verbatim value
+  * [ ] Quoted verbatim value + backslash
   * [ ] Title 1
   * [ ] Title 2
   * [x] Comments (fenced code blocks)

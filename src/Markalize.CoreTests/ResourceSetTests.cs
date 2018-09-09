@@ -20,7 +20,7 @@ namespace Markalize.CoreTests
             var set = new ResourceSet();
             set.LoadFromAssembly(typeof(ResourceSetTests).Assembly, "Resources/Source1");
 
-            var expectedKeys = new string[] { "Key1", "Key2", "HowAreYou", "MultiLine2DQ2", "MultiLine3DQ1", "MultiLineBs2", "MultiLineBs3", "MultiLineDQ1", "MultiLineDQ2", "MultiLineDQ3", };
+            var expectedKeys = new string[] { "HowAreYou", "Key1", "Key2", "MultiLine2DQ2", "MultiLine3DQ1", "MultiLineBs2", "MultiLineBs3", "MultiLineDQ1", "MultiLineDQ2", "MultiLineDQ3", };
 
             var keys = set.Keys;
             for (int i = 0, j = 0; i < keys.Length; i++)
@@ -126,8 +126,7 @@ namespace Markalize.CoreTests
 
             var localizer = set.GetLocalizer();
             var value = localizer.Localize("MultiLineDQ2");
-            value.ShouldEqual(@"This is the first line
-And here is the second and last one.");
+            value.ShouldEqual("This is the first line \r\nAnd here is the second and last one.");
         }
 
         [Fact]
@@ -138,9 +137,7 @@ And here is the second and last one.");
 
             var localizer = set.GetLocalizer();
             var value = localizer.Localize("MultiLineDQ3");
-            value.ShouldEqual(@"This is the first line 
-And here is the second one.
-This is the third and last line.");
+            value.ShouldEqual("This is the first line \r\nAnd here is the second one.\r\nThis is the third and last line.");
         }
 
         [Fact]
@@ -151,8 +148,7 @@ This is the third and last line.");
 
             var localizer = set.GetLocalizer();
             var value = localizer.Localize("MultiLine2DQ2");
-            value.ShouldEqual(@"This is the first line
-And here is the sec""ond and last one.");
+            value.ShouldEqual("This is the first line \r\nAnd here is the sec\"ond and last one.");
         }
     }
 }

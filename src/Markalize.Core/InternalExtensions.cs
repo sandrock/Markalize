@@ -66,6 +66,34 @@ namespace Markalize.Core
         }
 
         /// <summary>
+        /// Copy a part of a list into an array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        /// <param name="sourceOffset"></param>
+        /// <param name="destinationOffset"></param>
+        /// <param name="length"></param>
+        internal static void CopyTo<TSource, TDestination>(this IList<TSource> source, TDestination[] destination, int sourceOffset, int destinationOffset, int length, Func<TSource, TDestination> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (destination == null)
+                throw new ArgumentNullException("destination");
+            if (source.Count < (sourceOffset + length))
+                throw new ArgumentException("source is too small (" + source.Count + ") to read sourceOffset+length (" + (sourceOffset + length) + ")", "source");
+            if (destination.Length < (destinationOffset + length))
+                throw new ArgumentException("destination is too small (" + destination.Length + ") to read destinationOffset+length (" + (destinationOffset + length) + ")", "destination");
+
+            int s = sourceOffset;
+            int d = destinationOffset;
+            for (int ops = 0; ops < length; ops++)
+            {
+                destination[d++] = selector(source[s++]);
+            }
+        }
+
+        /// <summary>
         /// Checks whether the file matches all the given preferences.
         /// </summary>
         /// <param name="prefs"></param>

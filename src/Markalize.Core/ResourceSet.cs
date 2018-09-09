@@ -14,6 +14,7 @@ namespace Markalize.Core
     {
         private static readonly NoTraceSource trace = new NoTraceSource(nameof(ResourceSet), true);
         private static readonly string[] fileExtensions = new string[] { "md", "txt", };
+        private static readonly Parser defaultParser = new Parser();
         private readonly List<ResourceFile> resources = new List<ResourceFile>();
         private string[] keys;
 
@@ -105,16 +106,21 @@ namespace Markalize.Core
 
         public void LoadFromAssembly(Assembly assembly, string location)
         {
+            this.LoadFromAssembly(assembly, location, defaultParser);
+        }
+
+        public void LoadFromAssembly(Assembly assembly, string location, Parser parser)
+        {
+            if (parser == null)
+                throw new ArgumentNullException("parser");
             if (assembly == null)
                 throw new ArgumentNullException("assembly");
-
             if (string.IsNullOrEmpty(location))
                 throw new ArgumentException("The value cannot be empty", "location");
 
             // assembly embedded files use a dot as folder separator
             var location1 = assembly.GetName().Name + "." + location.Replace("/", ".").Replace("\\", ".");
 
-            var parser = new Parser();
             var traceMessage = new StringBuilder();
 
             // find files that match the pattern
