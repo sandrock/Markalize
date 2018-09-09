@@ -61,7 +61,7 @@ namespace Markalize.Core
                 var tagsCopy = new string[tags.Length - i];
                 Array.Copy(tags, tagsCopy, tagsCopy.Length);
 
-                var sources = this.resources.Where(x => ContainsAll(x.Tags, tagsCopy, StringComparison.OrdinalIgnoreCase)).ToArray();
+                var sources = this.resources.Where(x => x.Tags.ContainsAll(tagsCopy, StringComparison.OrdinalIgnoreCase)).ToArray();
                 localizer.AddSources(sources);
             }
 
@@ -247,34 +247,6 @@ namespace Markalize.Core
             }
 
             trace.Write(traceMessage);
-        }
-
-        private static bool ContainsAll(IList<string> haystack, IList<string> needles, StringComparison stringComparison)
-        {
-            var ok = new bool[needles.Count];
-            for (int i = 0; i < haystack.Count; i++)
-            {
-                for (int j = 0; j < ok.Length; j++)
-                {
-                    if (!ok[j])
-                    {
-                        for (int k = 0; k < needles.Count; k++)
-                        {
-                            if (string.Equals(haystack[i], needles[k], stringComparison))
-                            {
-                                ok[j] = true;
-
-                                if (Array.TrueForAll(ok, x => x))
-                                {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }
