@@ -37,9 +37,10 @@ namespace Markalize.Core
             while (!reader.EndOfStream)
             {
                 nextLine = ReadLine(reader, out lineEnding);
-                if (skip-- > 0)
+                if (skip > 0)
                 {
                     // don't do anything
+                    skip--;
                 }
                 else if (inQuotedValue)
                 {

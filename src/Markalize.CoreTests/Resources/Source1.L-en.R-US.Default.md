@@ -39,3 +39,33 @@ MultiLineDQ3 "This is the first line
 MultiLine2DQ2 ""This is the first line 
             And here is the sec"ond and last one.""
 
+Title1_
+==================
+
+Key1UnderT1 This should should be prefixed with the titles' key.
+
+Title2_
+-------------------
+
+Key1UnderT2 This should should be prefixed with both titles' key.
+
+SecondTitle1_
+==================
+
+Key2UnderT1 This should should be prefixed with the titles' key.
+
+SecondTitle2_
+-------------------
+
+Key2UnderT2 This should should be prefixed with both titles' key.
+
+ThirdTitle2_
+-------------------
+
+Key3UnderT2 This should should be prefixed with both titles' key.
+
+---
+
+Key1AfterTitles This should not be prefixed.
+
+
