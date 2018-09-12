@@ -20,7 +20,15 @@ namespace Markalize.CoreTests
             var set = new ResourceSet();
             set.LoadFromAssembly(typeof(ResourceSetTests).Assembly, "Resources/Source1");
 
-            var expectedKeys = new string[] { "HowAreYou", "Key1", "Key1AfterTitles", "Key2", "MultiLine2DQ2", "MultiLine3DQ1", "MultiLineBs2", "MultiLineBs3", "MultiLineDQ1", "MultiLineDQ2", "MultiLineDQ3", "SecondTitle1_Key2UnderT1", "SecondTitle1_SecondTitle2_Key2UnderT2", "SecondTitle1_ThirdTitle2_Key3UnderT2", "Title1_Key1UnderT1", "Title1_Title2_Key1UnderT2", };
+            var expectedKeys = new string[]
+            {
+                "HowAreYou",
+                "Key1", "Key1AfterTitles", "Key2",
+                "MultiLine2DQ2", "MultiLine3DQ1", "MultiLineBs2", "MultiLineBs3", "MultiLineDQ1", "MultiLineDQ2", "MultiLineDQ3",
+                "SecondTitle1_Key2UnderT1", "SecondTitle1_SecondTitle2_Key2UnderT2", "SecondTitle1_ThirdTitle2_Key3UnderT2",
+                "ThirdTitle1_FourthTitle2_Key4UnderT2", "ThirdTitle1_Key4UnderT1", 
+                "Title1_Key1UnderT1", "Title1_Title2_Key1UnderT2",
+            };
 
             var keys = set.Keys;
             for (int i = 0, j = 0; i < keys.Length; i++)
@@ -177,6 +185,12 @@ namespace Markalize.CoreTests
 
             value = localizer.Localize("Key1AfterTitles");
             value.ShouldEqual("This should not be prefixed.");
+
+            value = localizer.Localize("ThirdTitle1_Key4UnderT1");
+            value.ShouldEqual("This should should be prefixed with the titles' key.");
+
+            value = localizer.Localize("ThirdTitle1_FourthTitle2_Key4UnderT2");
+            value.ShouldEqual("This should should be prefixed with both titles' key.");
         }
     }
 }

@@ -68,4 +68,18 @@ Key3UnderT2 This should should be prefixed with both titles' key.
 
 Key1AfterTitles This should not be prefixed.
 
+Nice title [ThirdTitle1_]
+=================================
+
+Key4UnderT1 This should should be prefixed with the titles' key.
+
+I can have nice titles [FourthTitle2_]
+-------------------
+
+Key4UnderT2 This should should be prefixed with both titles' key.
+
+
+
+
+
 
