@@ -20,7 +20,7 @@ namespace Markalize.Core
 
         public bool PreserveNewLines { get; set; } = true;
 
-        public void Parse(StreamReader reader, ResourceFile resource)
+        public void Parse(TextReader reader, ResourceFile resource)
         {
             if (reader == null)
                 throw new ArgumentNullException("reader");
@@ -28,15 +28,37 @@ namespace Markalize.Core
             if (resource == null)
                 throw new ArgumentNullException("resource");
 
-            string line = reader.ReadLine(), nextLine = null, key = null, genre = null, lineEnding;
+            string line = null, nextLine = null, key = null, genre = null, lineEnding = null, nextLineEnding;
             int skip = 0, number = 0, quoteCount = 0;
             var prefixes = new List<string>(5);
+            var prefixesLevel = new List<byte>(5);
             bool isInFencedCode = false, inQuotedValue = false, nextLineInContinuation = false, isVerbatim = false;
             var lineBuilder = new StringBuilder();
             StringBuilder sb = null;
-            while (!reader.EndOfStream)
+
+            Func<bool> isEndOfStream;
+            if (reader is StreamReader)
             {
-                nextLine = ReadLine(reader, out lineEnding);
+                var streamReader = (StreamReader)reader;
+                isEndOfStream = new Func<bool>(() => streamReader.EndOfStream);
+            }
+            else
+            {
+                isEndOfStream = new Func<bool>(() => reader.Peek() < 0);
+            }
+
+            // loop on all lines                     (!isEndOfStream())
+            // make one extra turn for the last line (line != null))
+            while (!isEndOfStream() || line != null)
+            {
+                if (line == null)
+                {
+                    // first time in loop
+                    line = string.Empty;
+                    lineEnding = string.Empty;
+                }
+
+                nextLine = ReadLine(reader, out nextLineEnding);
                 if (skip > 0)
                 {
                     // don't do anything
@@ -44,7 +66,20 @@ namespace Markalize.Core
                 }
                 else if (inQuotedValue)
                 {
-                    var valueTrimmed = line.Trim();
+                    var rawValue = line;
+                    var valueTrimmed = rawValue.TrimStart();
+                    int leftTrim = rawValue.Length - valueTrimmed.Length;
+                    valueTrimmed = valueTrimmed.TrimEnd();
+                    int endTrim = rawValue.Length - valueTrimmed.Length - leftTrim;
+
+                    bool putLineFeed = true;
+                    if (valueTrimmed[valueTrimmed.Length - 1] == '\\')
+                    {
+                        // line ends with \
+                        valueTrimmed = valueTrimmed.Substring(0, valueTrimmed.Length - 1);
+                        putLineFeed = false;
+                    }
+
                     if (valueTrimmed.Length > 0 && valueTrimmed[valueTrimmed.Length - 1] == '"' && valueTrimmed.Reverse().Take(quoteCount).All(c => c == '"'))
                     {
                         // line ends with '"'
@@ -58,7 +93,8 @@ namespace Markalize.Core
                     {
                         // value continues
                         sb.Append(valueTrimmed);
-                        sb.Append(this.PreserveNewLines ? lineEnding : Environment.NewLine);
+                        sb.Append(rawValue, rawValue.Length - endTrim, endTrim); // cancel TrimEnd
+                        sb.AppendIf(this.NormalizeCRFL(lineEnding), putLineFeed);
                     }
                 }
                 else if (nextLineInContinuation)
@@ -100,7 +136,9 @@ namespace Markalize.Core
                     skip++;
                     var prefix = FindEnclosedPrefixInTitle(line) ?? ExtractKey(line, out string _, out int __, out string ___);
                     prefixes.Clear();
+                    prefixesLevel.Clear();
                     prefixes.Add(prefix);
+                    prefixesLevel.Add(1);
                 }
                 else if (IsTitle2Row(nextLine))
                 {
@@ -108,19 +146,24 @@ namespace Markalize.Core
                     skip++;
                     var prefix = FindEnclosedPrefixInTitle(line) ?? ExtractKey(line, out string _, out int __, out string ___);
 
-                    while (prefixes.Count > 1)
+                    while (prefixesLevel.Count(x => x >= 2) > 0) // keep title1 prefix
                     {
-                        prefixes.RemoveAt(1); // keep title1 prefix;
+                        var index = prefixes.Count - 1;
+                        prefixes.RemoveAt(index);
+                        prefixesLevel.RemoveAt(index);
                     }
 
                     prefixes.Add(prefix);
+                    prefixesLevel.Add(2);
                 }
                 else if (IsResetTitleRow(line))
                 {
                     prefixes.Clear();
+                    prefixesLevel.Clear();
                 }
                 else
                 {
+                    // this line is a key+value
                     key = ExtractKey(line, out string rawValue, out number, out genre);
 
                     if (key != null && prefixes.Count > 0)
@@ -178,9 +221,31 @@ namespace Markalize.Core
                             {
                                 inQuotedValue = true;
                                 sb = new StringBuilder();
+                                bool putLineFeed = true;
+                                if (valueTrimmed[valueTrimmed.Length - 1] == '\\')
+                                {
+                                    // line ends with \
+                                    valueTrimmed = valueTrimmed.Substring(0, valueTrimmed.Length - 1);
+                                    putLineFeed = false;
+                                }
+
                                 sb.Append(valueTrimmed);
-                                sb.Append(rawValue, rawValue.Length - endTrim, endTrim);
-                                sb.Append(this.PreserveNewLines ? lineEnding : Environment.NewLine);
+                                sb.Append(rawValue, rawValue.Length - endTrim, endTrim); // cancel TrimEnd
+                                sb.AppendIf(this.NormalizeCRFL(lineEnding), putLineFeed);
+
+                                ////if (valueTrimmed[valueTrimmed.Length - 1] == '\\')
+                                ////{
+                                ////    // quoted line ends with backslash
+                                ////    valueTrimmed = valueTrimmed.Remove(valueTrimmed.Length - 2);
+                                ////    sb.Append(valueTrimmed);
+                                ////    sb.Append(rawValue, rawValue.Length - endTrim, endTrim);
+                                ////}
+                                ////else
+                                ////{
+                                ////    sb.Append(valueTrimmed);
+                                ////    sb.Append(rawValue, rawValue.Length - endTrim, endTrim);
+                                ////    sb.Append(this.PreserveNewLines ? lineEnding : Environment.NewLine);
+                                ////}
                             }
                         }
                         else if (valueTrimmed[valueTrimmed.Length - 1] == '\\')
@@ -199,6 +264,7 @@ namespace Markalize.Core
                 }
 
                 line = nextLine;
+                lineEnding = nextLineEnding;
             }
 
             // this can't work with StreamReader: tne last line evaporates
@@ -214,23 +280,40 @@ namespace Markalize.Core
         /// <param name="reader"></param>
         /// <param name="lineEnding"></param>
         /// <returns></returns>
-        private static string ReadLine(StreamReader reader, out string lineEnding)
+        private static string ReadLine(TextReader reader, out string lineEnding)
         {
             lineEnding = null;
             var lineBuilder = new StringBuilder();
-            char c1 = (char)reader.Peek();
+            int i1 = reader.Peek(), i2;
+            char c1 = (char)i1;
             char c2;
-            while (c1 != -1)
-            {
-                c1 = (char)reader.Read();
 
-                if (c1 == '\r')
+            if (i1 < 0)
+            {
+                // stream already ended
+                lineEnding = null;
+                return null;
+            }
+
+            while (i1 != -1)
+            {
+                i1 = reader.Read();
+                c1 = (char)i1;
+
+                if (i1 < 0)
                 {
-                    c2 = (char)reader.Peek();
+                    // end of stream
+                    lineEnding = string.Empty;
+                    break;
+                }
+                else if (c1 == '\r')
+                {
+                    i2 = reader.Peek();
+                    c2 = (char)i2;
                     if (c2 == '\n')
                     {
                         // windows line ending
-                        c2 = (char)reader.Read();
+                        i2 = reader.Read();
                         lineEnding = "\r\n";
                         break;
                     }
@@ -322,6 +405,11 @@ namespace Markalize.Core
         private static bool IsResetTitleRow(string nextLine)
         {
             return nextLine != null && nextLine.Length >= 3 && nextLine.Trim().All(c => c == '-');
+        }
+
+        private string NormalizeCRFL(string lineFeed)
+        {
+            return this.PreserveNewLines ? lineFeed : Environment.NewLine;
         }
     }
 }

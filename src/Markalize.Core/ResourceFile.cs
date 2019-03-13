@@ -60,6 +60,22 @@ namespace Markalize.Core
             }
         }
 
+        public Entity this[string index]
+        {
+            get
+            {
+                Entity entity;
+                if (this.items.TryGetValue(index, out entity))
+                {
+                    return entity;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         public CultureInfo Culture { get; internal set; }
 
         public Dictionary<string, string> Dimensions { get; internal set; }

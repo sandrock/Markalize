@@ -4,12 +4,12 @@ namespace Markalize.Core
     using System;
     using System.Collections.Generic;
 
-    internal class Entity
+    public class Entity
     {
         private string defaultValue;
         private Dictionary<int, Dictionary<string, string>> numbers;
 
-        internal string Value { get => this.defaultValue; }
+        public string Value { get => this.defaultValue; }
 
         internal void Set(int number, string genre, string value)
         {

@@ -52,11 +52,11 @@ Aren't you tired of coding tricks to handle singular/plural/masculine/feminine v
 Let's dive
 -------------------
 
-Say that we are going to start with assembly-embedded files just like resx files. Don't worry, more is about to come.
+Say that we are going to start with assembly-embedded files just like resx files. Don't worry, more options are about to come.
 
 ### Keys and values
 
-Localization files are key-value pairs It does not change here. Here is a markdown-compatible default resource file.
+Localization files are key-value pairs. It does not change here. Here is a markdown-compatible default resource file.
 
 ```
 Hello =      Welcome on our website.
@@ -97,6 +97,8 @@ Desc2  And if I want to "leave the title"?
 ---
 
 Horizontal bars reset the prefix stack. Note that the current line will create a key `Horizontal` that I don't need. The beauty of doing markdown is that you are quite free to mix localized values, text and formating.
+
+// This is a commented line. This may help if the first word of your line interferes with another line.
 ```
 
 ### Lines and wraping
@@ -127,11 +129,11 @@ from becoming too long. ""
 
 You will need multiple files to handle mumtiple cultures. You will be able to handle more than culture.
 
-If you don't know how "cultures" and localization work in .NET, see [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) and [CultureInfo class](https://docs.microsoft.com/en-gb/dotnet/api/system.globalization.cultureinfo?view=netframework-4.7.2).
+If you don't know how "cultures" (languages, locales) and localization work in .NET, see [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) and [CultureInfo class](https://docs.microsoft.com/en-gb/dotnet/api/system.globalization.cultureinfo?view=netframework-4.7.2).
 
 Some languages allow two forms of the "you" pronoun, like in french. This is the [T-V distinction](https://en.wikipedia.org/wiki/T%E2%80%93V_distinction). "Tu" (thou) is familiar and is called "tutoiement". "Vous" is not and is called "vouvoiement". Say you want your users to choose between these forms...
 
-The principle here is to think about dimensions. Cultures already have at least 2 dimensions: the language and the region. You can add more dimensions! Do you like a subculture? You can create localization variants for your users.
+The principle here is to think about dimensions. Culture names already have at least 2 dimensions: the language and the region. You can add more dimensions! Do you like a subculture? You can create localization variants for your users.
 
 * Language dimension (standard): 
   * fr: french
@@ -170,13 +172,13 @@ With dimensions, you can compose localizations for everyone.
 
 Now your app: 
 
-* default to english
+* defaults to english
 * supports 2 forms of french
 * supports a special star-trek-english with known references to this subculture
 
 It's important to keep the 2 standard dimensions (language and region) in order to keep [formating right](https://docs.microsoft.com/en-us/globalization/locale/locale-and-culture).
 
-So. Create those file in visual studio. Set them as "embedded resource".
+So. Create those files in visual studio. Set them as "embedded resource".
 
 ```
 var set = new ResourceSet();

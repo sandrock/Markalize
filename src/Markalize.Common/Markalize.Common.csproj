@@ -11,7 +11,7 @@
     <Description>Contains base classes and interfaces to build on top of Markalize.Core.</Description>
     <PackageLicenseUrl>https://github.com/sandrock/Markalize/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sandrock/Markalize</PackageProjectUrl>
-    <Version>0.1.0-alpha</Version>
+    <Version>0.1.1-alpha</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

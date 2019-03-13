@@ -6,7 +6,7 @@
     <Product>Markalize</Product>
     <Authors />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.1.0-alpha</Version>
+    <Version>0.1.1-alpha</Version>
     <Description>A better way to localize your apps in .NET.</Description>
     <PackageLicenseUrl>https://github.com/sandrock/Markalize/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sandrock/Markalize</PackageProjectUrl>
