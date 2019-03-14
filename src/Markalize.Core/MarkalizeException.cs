@@ -6,7 +6,9 @@ namespace Markalize.Core
     using System.Runtime.Serialization;
     using System.Text;
 
-
+    /// <summary>
+    /// Exceptions for this library.
+    /// </summary>
     [Serializable]
     public class MarkalizeException : Exception
     {

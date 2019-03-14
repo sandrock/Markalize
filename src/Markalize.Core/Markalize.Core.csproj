@@ -10,7 +10,7 @@
     <Description>A better way to localize your apps in .NET.</Description>
     <PackageLicenseUrl>https://github.com/sandrock/Markalize/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/sandrock/Markalize</PackageProjectUrl>
-    <PackageReleaseNotes>Initial pre-release.</PackageReleaseNotes>
+    <PackageReleaseNotes>Various fixes for the previous release.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
